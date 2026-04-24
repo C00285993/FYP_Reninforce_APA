@@ -118,6 +118,13 @@ pip install -r requirements.txt
 
 # Copy and edit configuration
 cp .env.example .env
+# Windows PowerShell: Copy-Item .env.example .env
+
+# Open .env in any text editor and fill in:
+#   ANTHROPIC_API_KEY=sk-ant-...your-key-here...
+# Get a key at https://console.anthropic.com (Settings > API Keys).
+# The key is required for the LLM-assisted crawler, remediation,
+# and the interactive assistant (agents/assistant.py).
 
 # Start DVWA in Docker
 docker compose up -d
