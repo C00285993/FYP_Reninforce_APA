@@ -1,0 +1,20 @@
+# PPO Hyperparameters
+# Reference: Stable-Baselines3 PPO docs
+
+learning_rate: 0.0003       # Adam optimizer LR
+n_steps: 256                # Steps per rollout (before update)
+batch_size: 64              # Minibatch size
+n_epochs: 10                # Optimization epochs per rollout
+gamma: 0.99                 # Discount factor
+gae_lambda: 0.95            # GAE lambda for advantage estimation
+clip_range: 0.2             # PPO clipping parameter
+ent_coef: 0.01              # Entropy bonus (encourages exploration)
+vf_coef: 0.5                # Value function loss coefficient
+max_grad_norm: 0.5          # Gradient clipping
+net_arch: [128, 128]        # Hidden layer sizes (shared by actor and critic)
+
+# Notes:
+# - If agent doesn't explore enough: increase ent_coef (e.g., 0.05)
+# - If training is unstable: decrease clip_range, decrease learning_rate
+# - n_steps should be >= max_steps_per_episode for best results
+# - For comparison with DQN, keep gamma and net_arch the same

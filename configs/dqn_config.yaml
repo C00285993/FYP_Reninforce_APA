@@ -1,0 +1,20 @@
+# DQN Hyperparameters
+# Reference: Stable-Baselines3 DQN docs
+# Tune these based on training curves in TensorBoard
+
+learning_rate: 0.001        # Adam optimizer LR
+buffer_size: 50000          # Replay buffer capacity
+learning_starts: 500        # Steps before training begins
+batch_size: 64              # Minibatch size for updates
+gamma: 0.99                 # Discount factor
+exploration_fraction: 0.3   # Fraction of training for epsilon decay
+exploration_initial_eps: 1.0  # Starting epsilon (fully random)
+exploration_final_eps: 0.05   # Final epsilon (mostly greedy)
+target_update_interval: 250   # Steps between target network updates
+train_freq: 4               # Update every N steps
+net_arch: [128, 128]        # Hidden layer sizes
+
+# Notes:
+# - If agent never finds vulns: increase exploration_fraction, lower exploration_final_eps
+# - If agent is too slow: decrease buffer_size, increase learning_rate
+# - If agent is unstable: decrease learning_rate, increase target_update_interval

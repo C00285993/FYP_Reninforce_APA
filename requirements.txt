@@ -1,0 +1,38 @@
+# AI-Driven Penetration Testing Assistant
+# Requirements for Elvis Omorusi FYP (C00285993)
+
+# RL Framework
+stable-baselines3>=2.1.0
+gymnasium>=0.29.0
+torch>=2.0.0
+
+# Web Interaction
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+
+# Logging & Visualization
+tensorboard>=2.14.0
+rich>=13.6.0
+
+# Configuration
+python-dotenv>=1.0.0
+pyyaml>=6.0.1
+
+# Utilities
+numpy>=1.24.0
+
+# LLM Integration
+anthropic>=0.25.0
+
+# Browser Automation (Juice Shop XSS detection)
+playwright>=1.40.0
+
+# Document Generation (report scripts)
+python-docx>=0.8.11
+
+# Terminal colour output (scan.py, graceful fallback if absent)
+colorama>=0.4.6
+
+# Optional: LLM Integration (Phase 3)
+# langchain>=0.1.0    # Uncomment if using LangChain

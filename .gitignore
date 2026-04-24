@@ -1,0 +1,26 @@
+# Virtual environment
+venv/
+
+# Environment variables (secrets)
+.env
+
+# Generated outputs
+logs/
+models/
+results/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# IDE / editor
+.claude/
+.vscode/
+.idea/
+*.swp
+
+# OS
+Thumbs.db
+.DS_Store
